@@ -1,10 +1,16 @@
 <?php
-
     // $arr = ['ade', 'ola', 'femi']
     // array_splice($arr, 1, 1,  )
 
     session_start();
     // session_destroy();
+
+    if(isset($_SESSION['user'])){
+        $user = $_SESSION['user'];
+    }else{
+        header('location: /january/login.php');
+        exit;
+    }
 
     if (isset($_SESSION['contacts'])){
         $contacts = $_SESSION['contacts'];
@@ -119,7 +125,10 @@
     </div>
 
     </div>
-
+    
+    <div>
+        <a href="/january/logout.php" class="btn btn-dark ms-3">Logout</a>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 </body>
