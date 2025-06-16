@@ -5,8 +5,8 @@
 
 
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $password = mysqli_real_escape_string($conn, $_POST['password']);
 
         // echo $email. " " .$password;
         $sql = "SELECT * FROM user_table WHERE email = '$email' AND `password` = '$password'";

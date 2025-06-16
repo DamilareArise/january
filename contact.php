@@ -1,9 +1,7 @@
 <?php
-    // $arr = ['ade', 'ola', 'femi']
-    // array_splice($arr, 1, 1,  )
-
+    include 'database.php';
     session_start();
-    // session_destroy();
+    
 
     if(isset($_SESSION['user'])){
         $user = $_SESSION['user'];
@@ -12,20 +10,40 @@
         exit;
     }
 
-    if (isset($_SESSION['contacts'])){
-        $contacts = $_SESSION['contacts'];
+    // if (isset($_SESSION['contacts'])){
+    //     $contacts = $_SESSION['contacts'];
+    // }else{
+    //     $contacts = [];
+    // }
+
+    $created_by = $user['id'];
+
+    $sql = "SELECT * FROM contacts WHERE created_by = '$created_by'";
+    $result = mysqli_query($conn, $sql);
+    if(mysqli_num_rows($result) > 0){
+        $contacts = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        print_r($contacts);
     }else{
         $contacts = [];
     }
+
 
     $message = '';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         if(isset($_POST['contact_name']) && $_POST['contact_name'] != '' ) {
             $name = $_POST['contact_name'];
-            array_push($contacts, $name);
-            $_SESSION['contacts'] = $contacts;
-            // print_r($contacts);
+            
+            $sql = "INSERT INTO contacts(`name`, created_by) VALUES ('$name', '$created_by')";
+            $result = mysqli_query($conn, $sql);
+            if($result){
+                $message = 'Contact created successfully';
+                header('location: /january/contact.php');
+            }
+
+            // array_push($contacts, $name);
+            // $_SESSION['contacts'] = $contacts;
+            // // print_r($contacts);
             
         }
         else if (!empty($_POST['new_name']) && $_POST['index'] != ''){
@@ -89,7 +107,7 @@
             <ul>
                 <?php foreach($contacts as $index => $contact) {?>
                     <li> 
-                        <?php echo $contact ?> <a href="/january/contact.php/?id=<?php echo $index ?>" class="text-decoration-none">❌</a>
+                        <?php echo $contact['name'] ?> <a href="/january/contact.php/?id=<?php echo $index ?>" class="text-decoration-none">❌</a>
 
                         <!-- Button trigger modal -->
                         <a type="button" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModal_<?php echo $index ?>">
