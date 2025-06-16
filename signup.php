@@ -2,10 +2,10 @@
     include 'database.php';
 
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
-        $fullname = ($_POST['fullname']);
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $confirm_password = $_POST['confirm_password'];
+        $fullname = mysqli_real_escape_string($conn,($_POST['fullname']));
+        $email = mysqli_real_escape_string( $conn, $_POST['email']);
+        $password = mysqli_real_escape_string($conn, $_POST['password']);
+        $confirm_password = mysqli_real_escape_string($conn, $_POST['confirm_password']);
 
         if($password === $confirm_password){
             $sql = "INSERT INTO user_table(`name`, email, `password`) VALUES ('$fullname', '$email', '$password')";
